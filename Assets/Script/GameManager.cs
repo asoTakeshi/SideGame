@@ -10,21 +10,40 @@ public class GameManager : MonoBehaviour
     public Sprite gameCleraSpr;        // GameClera画像
     public GameObject panel;           //　パネル
     public GameObject restartButton;   // RESTARTボタン
-    public GameObject nextButton;      // ネクストボタン 
+    public GameObject nextButton;      // ネクストボタン
+
+    //+++時間制限追加+++
+    public GameObject timeBar;        //時間表示イメージ
+    public GameObject timeText;       //時間テキスト
+    TimeController timeCnt;           //TimeController
 
     Image titleImage;                  // 画像を表示しているImageコンポーネント
+    // +++ スコア追加 +++
+    public GameObject scoreText;       　//スコアテキスト
+    public static int totalScore;       //合計スコア
+    public int stageScore = 0;       　//ステージスコア
 
-    
+
     void Start()
     {
         //画像を非表示にする
         Invoke("InactiveImage", 1.0f);
         //ボタンを非表示にする
         panel.SetActive(false);
+        //TimeController
+        timeCnt = GetComponent<TimeController>();
+        if(timeCnt != null)
+        {
+            if (timeCnt.gameTime == 0.0f)
+            {
+                timeBar.SetActive(false);    //制限時間なしなら隠す
+            }
+        }
+        UpdateScore();
         
     }
 
-    
+
     void Update()
     {
         if (PlayerController.gameStste == "gameclear")
@@ -37,6 +56,17 @@ public class GameManager : MonoBehaviour
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameCleraSpr;     //画像を設定する
             PlayerController.gameStste = "gameend";
+            if (timeCnt != null)
+            {
+                timeCnt.isTimeOver = true;      //時間カウント停止
+                //整数に代入することで少数を切り捨てる
+                int time = (int)timeCnt.displayTime;
+                totalScore += time * 10;    //残り時間をスコアに加える
+            }
+            totalScore += stageScore;
+            stageScore = 0;
+            UpdateScore(); //スコア更新
+
         }
         else if (PlayerController.gameStste == "gameover")
         {
@@ -48,10 +78,40 @@ public class GameManager : MonoBehaviour
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameOverSpr;     //画像を設定する
             PlayerController.gameStste = "gameend";
+            if (timeCnt != null)
+            {
+                timeCnt.isTimeOver = true;      //時間カウント停止
+            }
+
         }
         else if(PlayerController.gameStste == "playing")
         {
             //ゲーム中
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            //PlayerContyollerを取得
+            PlayerController playerCnt = player.GetComponent<PlayerController>();
+            //タイムを更新する
+            if (timeCnt != null)
+            {
+                if (timeCnt.gameTime > 0.0f)
+                {
+                    //整数に代入することで少数を切り捨てる
+                    int time = (int)timeCnt.displayTime;
+                    //タイム更新
+                    timeText.GetComponent<Text>().text = time.ToString();
+                    //タイムオーバー
+                    if (time == 0)
+                    {
+                        playerCnt.GameOver();       //ゲームオーバーにする
+                    }
+                }    
+            if (playerCnt.score != 0)
+                {
+                    stageScore += playerCnt.score;
+                    playerCnt.score = 0;
+                    UpdateScore();
+                }   
+            }
         }
     }
     
@@ -61,5 +121,10 @@ public class GameManager : MonoBehaviour
     void InactiveImage()
     {
         mainImage.SetActive(false);
+    }
+    void UpdateScore()
+    {
+        int score = stageScore + totalScore;
+        scoreText.GetComponent<Text>().text = score.ToString();
     }
 }

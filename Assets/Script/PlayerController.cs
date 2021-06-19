@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     string nowAnime = "";
     string oldAnime = "";
     public static string gameStste = "playing";   //ゲームの状態
+    public int score = 0;            // スコア
+
     void Start()
     {
         //Rigidbody2D取得
@@ -132,6 +134,17 @@ public class PlayerController : MonoBehaviour
         else if(col.gameObject.tag == "Dead")
         {
             GameOver();    //ゲームオーバー
+        }
+        else if (col.gameObject.tag == "ScoreItem")
+        {
+            //スコアアイテム
+            //ItenDataを取得
+            ItemData item = col.gameObject.GetComponent<ItemData>();
+            //スコアを取得
+            score = item.value;
+
+            //アイテム削除
+            Destroy(col.gameObject);
         }
     }
 
