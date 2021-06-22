@@ -45,6 +45,7 @@ public class SwitchAction : MonoBehaviour
             else
             {
                 on = true;
+                GetComponent<SpriteRenderer>().sprite = imageOn;
                 MovingBlock movBlock = targetMoveBlock.GetComponent<MovingBlock>();
                 movBlock.Move();
 

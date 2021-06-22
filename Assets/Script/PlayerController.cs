@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     string oldAnime = "";
     public static string gameStste = "playing";   //ゲームの状態
     public int score = 0;            // スコア
+    bool isMoving = false;           //タッチスクリーン対応追加
 
     void Start()
     {
@@ -40,9 +41,13 @@ public class PlayerController : MonoBehaviour
         if (gameStste != "playing")
         {
             return;
+        };
+        //移動
+        if (isMoving == false)
+        {
+            //水平方向の入力をチェックする
+            axisH = Input.GetAxisRaw("Horizontal");
         }
-        //水平方向の入力をチェックする
-        axisH = Input.GetAxisRaw("Horizontal");
         //向きの調整
         if (axisH > 0.0f)
         {
@@ -185,5 +190,23 @@ public class PlayerController : MonoBehaviour
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         //速度を0にして強制停止
         rb.velocity = new Vector2(0, 0);
+    }
+
+    /// <summary>
+    /// タッチスクリーン対応追加
+    /// </summary>
+    /// <param name="h"></param>
+    /// <param name="v"></param>
+    public void SetAxis(float h ,float v)
+    {
+        axisH = h;
+        if(axisH == 0)
+        {
+            isMoving = false;
+        }
+        else
+        {
+            isMoving = true;
+        }
     }
 }

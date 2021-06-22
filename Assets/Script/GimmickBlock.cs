@@ -55,7 +55,10 @@ public class GimmickBlock : MonoBehaviour
 
         }
     }
-    //接触開始
+    /// <summary>
+    /// 接触開始
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (isDelete)

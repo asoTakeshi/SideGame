@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour
     public GameObject scoreText;       　//スコアテキスト
     public static int totalScore;       //合計スコア
     public int stageScore = 0;       　//ステージスコア
+    public AudioClip meGameOver;       //ゲームオーバー
+    public AudioClip meGameClear;       //ゲームクリア
+
+    //+++プレイヤー操作+++
+    public GameObject inputUI;
 
 
     void Start()
@@ -66,6 +71,16 @@ public class GameManager : MonoBehaviour
             totalScore += stageScore;
             stageScore = 0;
             UpdateScore(); //スコア更新
+            // サウンド再生
+            AudioSource soundPlayer = GetComponent<AudioSource>();
+            if (soundPlayer != null)
+            {
+                //BGM停止
+                soundPlayer.Stop();
+                soundPlayer.PlayOneShot(meGameClear);
+            }
+            //+++プレイヤー操作+++
+            inputUI.SetActive(false);     //操作UIを隠す
 
         }
         else if (PlayerController.gameStste == "gameover")
@@ -82,7 +97,16 @@ public class GameManager : MonoBehaviour
             {
                 timeCnt.isTimeOver = true;      //時間カウント停止
             }
-
+            // サウンド再生
+            AudioSource soundPlayer = GetComponent<AudioSource>();
+            if (soundPlayer != null)
+            {
+                //BGM停止
+                soundPlayer.Stop();
+                soundPlayer.PlayOneShot(meGameOver);
+            }
+            //+++プレイヤー操作+++
+            inputUI.SetActive(false);     //操作UIを隠す
         }
         else if(PlayerController.gameStste == "playing")
         {
@@ -114,7 +138,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// 画像を非表示にする
     /// </summary>
@@ -122,9 +146,24 @@ public class GameManager : MonoBehaviour
     {
         mainImage.SetActive(false);
     }
+
+    /// <summary>
+    /// スコア追加
+    /// </summary>
     void UpdateScore()
     {
         int score = stageScore + totalScore;
         scoreText.GetComponent<Text>().text = score.ToString();
+    }
+
+    //+++プレイヤー操作+++
+    /// <summary>
+    /// ジャンプ
+    /// </summary>
+    public void Jump()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PlayerController playerCnt = player.GetComponent<PlayerController>();
+        playerCnt.Jump();
     }
 }
