@@ -128,6 +128,8 @@ public class MovingBlock : MonoBehaviour
         {
             //接触したのがプレイヤーなら移動床の子にする
             col.transform.SetParent(transform);
+            col.transform.localScale = Vector3.one;
+
             if (isMoveWhenOn)
             {
                 //乗った時に動くフラグON

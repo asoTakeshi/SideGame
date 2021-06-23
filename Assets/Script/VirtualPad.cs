@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class VirtualPad : MonoBehaviour
 {
-    public float MaxLength = 70;         //タブが動く最大距離
+    public float maxLength = 70;         //タブが動く最大距離
     public bool is4DPad = false;         //上下左右に動かすフラグ
     GameObject player;                   //操作するプレイヤーのGameObject
     Vector2 defPos;                      //タブの初期座標
@@ -50,11 +50,11 @@ public class VirtualPad : MonoBehaviour
         Vector2 axis = newTabPos.normalized;    //ベクトルを正視化する
         //2点の距離を求める
         float len = Vector2.Distance(defPos, newTabPos);
-        if (len > MaxLength)
+        if (len > maxLength)
         {
             //限界距離を超えたので限界座標を設定する
-            newTabPos.x = axis.x * MaxLength;
-            newTabPos.y = axis.y * MaxLength;
+            newTabPos.x = axis.x * maxLength;
+            newTabPos.y = axis.y * maxLength;
         }
         //タブを移動させる
         GetComponent<RectTransform>().localPosition = newTabPos;

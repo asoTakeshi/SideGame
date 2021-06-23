@@ -8,8 +8,12 @@ public class EnemyController : MonoBehaviour
     public string directino = "left";      //向きright or left
     public float range = 0.0f;             //動く回る範囲
     Vector3 defPos;                        //初期位置
+    Rigidbody2D rb;
     void Start()
     {
+        // 速度を更新
+        //Rigidbodyを取得
+        rb = GetComponent<Rigidbody2D>();
         if (directino == "right")
         {
             transform.localScale = new Vector2(-1, 1);  //向きの変更
@@ -39,7 +43,7 @@ public class EnemyController : MonoBehaviour
     {
         //速度を更新
         //Rigidbodyを取得
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        //Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (directino == "right")
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
